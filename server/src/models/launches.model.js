@@ -1,3 +1,5 @@
+const launchesRouter = require("../routes/launches/launches.router");
+
 const launches = new Map();
 let latestFlightNumber = 100;
 
@@ -6,8 +8,8 @@ const launch = {
 	mission: "Kepler Exploration",
 	rocket: "Explorer IS1",
 	launchDate: new Date("December 27, 2030"),
-	destination: "kepler-422 b",
-	customer: ["ZTM", "NASA", "NCS"],
+	target: "kepler-422 b",
+	customers: ["ZTM", "NASA", "NCS"],
 	upcoming: true,
 	success: true,
 };
@@ -24,14 +26,28 @@ function addNewLaunch(launch) {
 		latestFlightNumber,
 		Object.assign(launch, {
 			flightNumber: latestFlightNumber,
-			customer: ["ZTM", "NASA", "NCS"],
+			customers: ["ZTM", "NASA", "NCS"],
 			upcoming: true,
 			success: true,
 		})
 	);
 }
 
+function existsLaunchWithId(launchId) {
+	return launches.has(launchId);
+}
+
+function abortLaunchById(launchId) {
+	const aborted = launches.get(launchId);
+	aborted.upcoming = false;
+	aborted.success = false;
+
+	return aborted;
+}
+
 module.exports = {
 	getAllLaunches,
 	addNewLaunch,
+	existsLaunchWithId,
+	abortLaunchById,
 };
